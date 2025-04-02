@@ -1,0 +1,158 @@
+---
+parameters:
+  - name: timeoutInMinutes
+    displayName: 'Timeout in minutes'
+    type: number
+    default: 180
+  - name: run_plan
+    displayName: Run Plan
+    type: boolean
+    default: true
+  - name: run_apply
+    displayName: Run Apply (Plan needed)
+    type: boolean
+    default: true
+  - name: run_destroy
+    displayName: Run Destroy ☢
+    type: boolean
+    default: false
+
+trigger: none
+
+stages:
+  - ${{ if eq(parameters.run_plan, true) }}:
+      - stage: plan
+        jobs:
+          - job: plan
+            pool: $(AGENT_POOL)
+            continueOnError: false
+            workspace:
+              clean: all
+            timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
+            steps:
+              - checkout: self
+              - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+                displayName: "Token replacement"
+                inputs:
+                  rootDirectory: $(System.DefaultWorkingDirectory)
+                  targetFiles: |
+                    **/*.tfvars
+                  tokenPrefix: "#{"
+                  tokenSuffix: "}#"
+                  action: "fail"
+              - template: templates/init.yaml
+              - bash: |
+                  set -x
+                  rover_params=(
+                    --impersonate-sp-from-keyvault-url $(impersonateSpFromKeyVaultUrl)
+                    -lz "${BUILD_REPOSITORY_LOCALPATH}$(landingZonePath)"
+                    -var-folder "${BUILD_REPOSITORY_LOCALPATH}$(configPath)"
+                    -parallelism=30
+                    -tfstate_subscription_id $(tfstateSubscriptionId)
+                    -target_subscription $(targetSubscriptionId)
+                    -tfstate $(tfstateName)
+                    -env $(ENVIRONMENT)
+                    -level $(level)
+                    -p "$(Build.ArtifactStagingDirectory)/$(tfstateName).tfplan"
+                    -a plan
+                  )
+                  rover_params+=($(extraRoverParams))
+                  /tf/rover/rover.sh "${rover_params[@]}"
+                  (( $? == 1 )) && exit 1 || exit 0
+                failOnStderr: false
+                displayName: 'Terraform Plan'
+              - task: PublishBuildArtifacts@1
+                displayName: "Publish Artifact"
+                inputs:
+                  artifactName: $(Build.BuildId)-tfplan
+                  PathtoPublish: $(Build.ArtifactStagingDirectory)/$(tfstateName).tfplan
+  - ${{ if eq(parameters.run_apply, true) }}:
+      - stage: apply
+        dependsOn:
+          - plan
+        condition: succeeded()
+        jobs:
+          - deployment: apply
+            displayName: apply
+            pool: $(AGENT_POOL)
+            environment: $(AZDO_ENVIRONMENT)
+            continueOnError: false
+            workspace:
+              clean: all
+            timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - checkout: self
+                    - template: templates/init.yaml
+                    - task: DownloadPipelineArtifact@2
+                      displayName: "download tfplan artifact"
+                      inputs:
+                        artifact: $(Build.BuildId)-tfplan
+                        path: $(Build.ArtifactStagingDirectory)
+                    - bash: |
+                        set -x
+                        rover_params=(
+                          --impersonate-sp-from-keyvault-url $(impersonateSpFromKeyVaultUrl)
+                          -lz "${BUILD_REPOSITORY_LOCALPATH}$(landingZonePath)"
+                          -var-folder "${BUILD_REPOSITORY_LOCALPATH}$(configPath)"
+                          -parallelism=30
+                          -tfstate_subscription_id $(tfstateSubscriptionId)
+                          -target_subscription $(targetSubscriptionId)
+                          -tfstate $(tfstateName)
+                          -env $(ENVIRONMENT)
+                          -level $(level)
+                          -p "$(Build.ArtifactStagingDirectory)/$(tfstateName).tfplan"
+                          -a apply
+                        )
+                        rover_params+=($(extraRoverParams))
+                        /tf/rover/rover.sh "${rover_params[@]}"
+                        (( $? == 1 )) && exit 1 || exit 0
+                      failOnStderr: false
+                      displayName: 'Terraform Apply'
+  - ${{ if eq(parameters.run_destroy, true) }}:
+      - stage: destroy
+        jobs:
+          - deployment: destroy
+            displayName: destroy
+            pool: $(AGENT_POOL)
+            environment: $(AZDO_ENVIRONMENT)
+            continueOnError: false
+            workspace:
+              clean: all
+            timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - checkout: self
+                    - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+                      displayName: "Token replacement"
+                      inputs:
+                        rootDirectory: $(System.DefaultWorkingDirectory)
+                        targetFiles: |
+                          **/*.tfvars
+                        tokenPrefix: "#{"
+                        tokenSuffix: "}#"
+                        action: "fail"
+                    - template: templates/init.yaml
+                    - bash: |
+                        set -x
+                        rover_params=(
+                          --impersonate-sp-from-keyvault-url $(impersonateSpFromKeyVaultUrl) \
+                          -lz "${BUILD_REPOSITORY_LOCALPATH}$(landingZonePath)" \
+                          -var-folder "${BUILD_REPOSITORY_LOCALPATH}$(configPath)" \
+                          -parallelism=30 \
+                          -tfstate_subscription_id $(tfstateSubscriptionId) \
+                          -target_subscription $(targetSubscriptionId) \
+                          -tfstate $(tfstateName) \
+                          -env $(ENVIRONMENT) \
+                          -level $(level) \
+                          -a destroy
+                        )
+                        rover_params+=($(extraRoverParams))
+                        /tf/rover/rover.sh "${rover_params[@]}"
+                        (( $? == 1 )) && exit 1 || exit 0
+                      failOnStderr: false
+                      displayName: 'Terraform Destroy'

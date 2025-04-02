@@ -1,0 +1,35 @@
+subscriptions:
+  gitops:
+    caf_landingzone_branch: 2203.1
+
+  relative_destination_folder: level1/subscriptions
+
+  tfstate:
+    lz_key_name: subscriptions
+    tfstate: platform_subscriptions.tfstate
+    level: level1
+    identity_aad_key: cred_subscription_creation_platform
+    config_file: subscriptions.yaml
+    sub_template_folder: platform/level1/subscriptions
+    # Do not rename the tfstate_key_name
+    tfstate_key_name: subscriptions
+
+  resources:
+    subscriptions:
+      subscriptions:
+        launchpad:
+          name: keymatedev-management
+          create_alias: false
+          subscription_id: 16e59691-bf0d-44ec-acbe-9797f673378d
+        identity:
+          name: keymatedev-management
+          create_alias: false
+          subscription_id: 16e59691-bf0d-44ec-acbe-9797f673378d
+        connectivity:
+          name: keymatedev-management
+          create_alias: false
+          subscription_id: 16e59691-bf0d-44ec-acbe-9797f673378d
+        management:
+          name: keymatedev-management
+          create_alias: false
+          subscription_id: 16e59691-bf0d-44ec-acbe-9797f673378d

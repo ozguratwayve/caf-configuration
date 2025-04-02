@@ -1,0 +1,36 @@
+global:
+  # To run as non-root, enable and define a custom MSI with access to AKV (keyVaultAuth must be set to 'azureCloudConfig')
+  userDefinedMSI:
+    # -- (bool) Enable usage of user-defined MSI for AKV authentication (for running pods as non-root)
+    enabled: true
+    # -- User-defined MSI object ID for AKV Authentication
+    msi: e55f479a-f3aa-4ae5-a9af-319dd72a331e
+    # -- Azure subscription ID where the user-defined MSI for AKV Authentication resides
+    subscriptionId: 0b1721ec-b6df-477a-9775-cefc9cfa984f
+    # -- Azure tenant ID where the user-defined MSI for AKV Authentication resides
+    tenantId: 07854bea-1ad0-4a14-b1e5-c5da8ff45eb7
+    # -- Azure cloud type (usually AzurePublicCloud)
+    azureCloudType: AzurePublicCloud
+
+
+
+controller:
+  tolerations:
+  - key: "CriticalAddonsOnly"
+    operator: "Equal"
+    value: "true"
+  securityContext:
+    # -- Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used
+    allowPrivilegeEscalation: false
+    #   runAsUser: 65534
+
+
+env_injector:
+  tolerations:
+  - key: "CriticalAddonsOnly"
+    operator: "Equal"
+    value: "true"
+  securityContext:
+    # -- Must be `true` if using aks identity - can be set to false if userDefinedMSI is enabled, or Azure AD Pod Identity is used
+    allowPrivilegeEscalation: false
+  #   runAsUser: 65534

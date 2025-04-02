@@ -1,0 +1,131 @@
+{
+  "name": "Deny-KeyVault-Minimum-Expiration",
+  "type": "Microsoft.Authorization/policySetDefinitions",
+  "apiVersion": "2021-06-01",
+  "scope": null,
+  "properties": {
+    "policyType": "Custom",
+    "displayName": "Deny Key Vault keys and secrets with non-compliant expiration dates",
+    "description": "This policy initiative is a group of policies that prevents creation of Azure Key Vault secrets with non-compliant expiration dates.",
+    "metadata": {},
+    "parameters": {
+      "KeyVaultKeysMinimumDaysBeforeExpirationEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Enforce the minimum days before expiration",
+          "description": "If a key is too close to expiration, an organizational delay to rotate the Key may result in an outage. Keys should be rotated at a specified number of days prior to expiration to provide sufficient time to react to a failure."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "KeyVaultKeysMinimumDaysBeforeExpirationValue": {
+        "type": "Integer",
+        "metadata": {
+          "displayName": "The minimum days before expiration",
+          "description": "Specify the minimum number of days that a key should remain usable prior to expiration."
+        },
+        "defaultValue": 30
+      },
+      "KeyVaultKeysMissingExpirationDateEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "'Audit' allows a non-compliant resource to be created, but flags it as non-compliant. 'Deny' blocks the resource creation. 'Disabled' turns off the policy."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "KeyVaultSecretsMinimumDaysBeforeExpirationEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Enforce the minimum days before expiration",
+          "description": "If a Secret is too close to expiration, an organizational delay to rotate the Secret may result in an outage. Secrets should be rotated at a specified number of days prior to expiration to provide sufficient time to react to a failure."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      },
+      "KeyVaultSecretsMinimumDaysBeforeExpirationValue": {
+        "type": "Integer",
+        "metadata": {
+          "displayName": "The minimum days before expiration",
+          "description": "Specify the minimum number of days that a Secret should remain usable prior to expiration."
+        },
+        "defaultValue": 30
+      },
+      "KeyVaultSecretsMissingExpirationDateEffect": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Effect",
+          "description": "'Audit' allows a non-compliant resource to be created, but flags it as non-compliant. 'Deny' blocks the resource creation. 'Disabled' turns off the policy."
+        },
+        "allowedValues": [
+          "Audit",
+          "Deny",
+          "Disabled"
+        ],
+        "defaultValue": "Audit"
+      }
+    },
+    "policyDefinitions": [
+      {
+        "policyDefinitionReferenceId": "KeyVaultKeysMinimumDaysBeforeExpiration",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/5ff38825-c5d8-47c5-b70e-069a21955146",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('KeyVaultKeysMinimumDaysBeforeExpirationEffect')]"
+          },
+          "MinimumDaysBeforeExpiration": {
+            "value": "[parameters('KeyVaultKeysMinimumDaysBeforeExpirationValue')]"
+          }
+        },
+        "groupNames": []
+      },
+      {
+        "policyDefinitionReferenceId": "KeyVaultKeysMissingExpirationDate",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/152b15f7-8e1f-4c1f-ab71-8c010ba5dbc0",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('KeyVaultKeysMissingExpirationDateEffect')]"
+          }
+        },
+        "groupNames": []
+      },
+      {
+        "policyDefinitionReferenceId": "KeyVaultSecretsMinimumDaysBeforeExpiration",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/b0eb591a-5e70-4534-a8bf-04b9c489584a",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('KeyVaultSecretsMinimumDaysBeforeExpirationEffect')]"
+          },
+          "MinimumDaysBeforeExpiration": {
+            "value": "[parameters('KeyVaultSecretsMinimumDaysBeforeExpirationValue')]"
+          }
+        },
+        "groupNames": []
+      },
+      {
+        "policyDefinitionReferenceId": "KeyVaultSecretsMissingExpirationDate",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/98728c90-32c7-4049-8429-847dc0f4fe37",
+        "parameters": {
+          "effect": {
+            "value": "[parameters('KeyVaultSecretsMissingExpirationDateEffect')]"
+          }
+        },
+        "groupNames": []
+      }
+    ],
+    "policyDefinitionGroups": null
+  }
+}

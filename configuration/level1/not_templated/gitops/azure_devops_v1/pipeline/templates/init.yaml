@@ -1,0 +1,24 @@
+---
+steps:
+ - bash: |
+    set -e
+    landingzone_private=$(LANDINGZONE_PRIVATE)
+    if [[ $landingzone_private == "true" ]]; then
+      pat="$(keymatedev-git-clone-pat)"
+      b64_pat=$(printf "%s"":$pat" | base64)
+      git clone -c http.extraheader="AUTHORIZATION: Basic $b64_pat" --branch $(LANDINGZONE_BRANCH) $(LANDINGZONE_URL) ${BUILD_REPOSITORY_LOCALPATH}/landingzones
+    else
+      git clone --branch $(LANDINGZONE_BRANCH) $(LANDINGZONE_URL) ${BUILD_REPOSITORY_LOCALPATH}/landingzones
+    fi
+
+    # Hack until the landing zone is using 5.6.0. [Terraform plan from 7 min to 1:30 min]
+    # https://github.com/aztfmod/terraform-azurerm-caf/issues/968
+    disable_vm_files=$(disableVmFiles)
+    if [[ $disable_vm_files == true ]]; then
+      mv ${BUILD_REPOSITORY_LOCALPATH}/landingzones/caf_solution/vm_extensions.tf{,.ignore}
+      mv ${BUILD_REPOSITORY_LOCALPATH}/landingzones/caf_solution/vmss_extensions.tf{,.ignore}
+    fi
+    az login --identity
+    az extension add --name resource-graph
+    wget -q https://github.com/Azure/kubelogin/releases/download/v0.0.26/kubelogin-linux-amd64.zip && unzip kubelogin-linux-amd64.zip && sudo mv  bin/linux_amd64/kubelogin /usr/local/bin
+   displayName: "Caf Init"

@@ -1,0 +1,32 @@
+
+managed_identities = {
+  level0 = {
+    # Used by the release agent to access the level0 keyvault and storage account with the tfstates in read / write
+    name               = "landingzone-prod-level0-msi"
+    resource_group_key = "rg0"
+  }
+  level1 = {
+    # Used by the release agent to access the level1 keyvault and storage account with the tfstates in read / write
+    # Has read access to level0
+    name               = "landingzone-prod-level1-msi"
+    resource_group_key = "rg1"
+  }
+  level2 = {
+    # Used by the release agent to access the level2 keyvault and storage account with the tfstates in read / write
+    # Has read access to level1
+    name               = "landingzone-prod-level2-msi"
+    resource_group_key = "rg2"
+  }
+  level3 = {
+    # Used by the release agent to access the level3 keyvault and storage account with the tfstates in read / write
+    # Has read access to level2
+    name               = "landingzone-prod-level3-msi"
+    resource_group_key = "rg3"
+  }
+  level4 = {
+    # Used by the release agent to access the level4 keyvault and storage account with the tfstates in read / write
+    # Has read access to level3
+    name               = "landingzone-prod-level4-msi"
+    resource_group_key = "rg4"
+  }
+}

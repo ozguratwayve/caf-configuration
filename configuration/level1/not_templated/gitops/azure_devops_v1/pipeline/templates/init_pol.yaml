@@ -1,0 +1,6 @@
+---
+steps:
+ - bash: |
+    az login --identity
+    az extension add --name resource-graph
+   displayName: "Caf Init"

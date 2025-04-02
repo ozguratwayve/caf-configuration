@@ -1,0 +1,11 @@
+# tfvars file disabled for now until regression is fixed: https://github.com/aztfmod/terraform-azurerm-caf/pull/1693
+azuread_groups_membership = {
+  caf_purview_service_accounts = { # ad group key
+    managed_identities = {
+      management_purview_identity = {
+        group_lz_key = "identity"
+        keys         = ["management_purview_identity"]
+      }
+    }
+  }
+}

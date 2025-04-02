@@ -1,0 +1,123 @@
+
+keyvaults = {
+  sshl0 = {
+    name                = "sshl0"
+    resource_group_key  = "rg0"
+    sku_name            = "premium"
+    soft_delete_enabled = true
+
+    creation_policies = {
+      caf_platform_maintainers = {
+        lz_key             = "launchpad"
+        azuread_group_key  = "caf_platform_maintainers"
+        secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      msi_level1 = {
+        managed_identity_key = "level1"
+        secret_permissions   = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      # Uncomment if run locally, not needed in pipelines deployment.
+      # logged_in_user = {
+      #   # if the key is set to "logged_in_user" add the user running terraform in the keyvault policy
+      #   # More examples in /examples/keyvault
+      #   secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      # }
+    }
+  }
+  sshl1 = {
+    name                = "sshl11"
+    resource_group_key  = "rg1"
+    sku_name            = "premium"
+    soft_delete_enabled = true
+
+    creation_policies = {
+      caf_platform_maintainers = {
+        lz_key             = "launchpad"
+        azuread_group_key  = "caf_platform_maintainers"
+        secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      msi_level1 = {
+        managed_identity_key = "level1"
+        secret_permissions   = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      # Uncomment if run locally, not needed in pipelines deployment.
+      # logged_in_user = {
+      #   # if the key is set to "logged_in_user" add the user running terraform in the keyvault policy
+      #   # More examples in /examples/keyvault
+      #   secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      # }
+    }
+  }
+  sshl2 = {
+    name                = "sshl2"
+    resource_group_key  = "rg2"
+    sku_name            = "premium"
+    soft_delete_enabled = true
+
+    creation_policies = {
+      caf_platform_maintainers = {
+        lz_key             = "launchpad"
+        azuread_group_key  = "caf_platform_maintainers"
+        secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      msi_level1 = {
+        managed_identity_key = "level1"
+        secret_permissions   = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      # Uncomment if run locally, not needed in pipelines deployment.
+      # logged_in_user = {
+      #   # if the key is set to "logged_in_user" add the user running terraform in the keyvault policy
+      #   # More examples in /examples/keyvault
+      #   secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      # }
+    }
+  }
+  sshl3 = {
+    name                = "sshl3"
+    resource_group_key  = "rg3"
+    sku_name            = "premium"
+    soft_delete_enabled = true
+
+    creation_policies = {
+      caf_platform_maintainers = {
+        lz_key             = "launchpad"
+        azuread_group_key  = "caf_platform_maintainers"
+        secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      msi_level1 = {
+        managed_identity_key = "level1"
+        secret_permissions   = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      # Uncomment if run locally, not needed in pipelines deployment.
+      # logged_in_user = {
+      #   # if the key is set to "logged_in_user" add the user running terraform in the keyvault policy
+      #   # More examples in /examples/keyvault
+      #   secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      # }
+    }
+  }
+  sshl4 = {
+    name                = "sshl4"
+    resource_group_key  = "rg4"
+    sku_name            = "premium"
+    soft_delete_enabled = true
+
+    creation_policies = {
+      caf_platform_maintainers = {
+        lz_key             = "launchpad"
+        azuread_group_key  = "caf_platform_maintainers"
+        secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      msi_level1 = {
+        managed_identity_key = "level1"
+        secret_permissions   = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      }
+      # Uncomment if run locally, not needed in pipelines deployment.
+      # logged_in_user = {
+      #   # if the key is set to "logged_in_user" add the user running terraform in the keyvault policy
+      #   # More examples in /examples/keyvault
+      #   secret_permissions = ["Set", "Get", "List", "Delete", "Purge", "Recover"]
+      # }
+    }
+  }
+}

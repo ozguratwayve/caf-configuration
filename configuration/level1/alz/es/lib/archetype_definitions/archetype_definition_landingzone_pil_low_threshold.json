@@ -1,0 +1,33 @@
+{
+    "landingzone_pil_low_threshold": {
+        "policy_assignments": [
+            "Deny-IP-Forwarding",
+            "Deny-Priv-Containers-AKS",
+            "Deny-Priv-Escalation-AKS",
+            "Enforce-AKS-HTTPS",
+            "Deny-Private-DNS-Zones",
+            "Deny-RDP-From-Internet",
+            "Deny-Storage-http",
+            "Enforce-TLS-SSL",
+            "Deny-Public-Endpoints",
+            "Deny-Public-IP",
+            "Deny-DataB-Pip",
+            "Deny-DataB-Sku",
+            "Deny-DataB-Vnet",
+            "Deploy-SQL-Security",
+            "Deny-KeyVault-Expiration"
+        ],
+        "policy_definitions": [
+        ],
+        "policy_set_definitions": [
+        ],
+        "role_definitions": [
+        ],
+        "archetype_config": {
+            "parameters": {
+            },
+            "access_control": {
+            }
+        }
+    }
+}
